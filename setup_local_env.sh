@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Setup local environment script
+echo "Setting up local environment..."
+
+# Update .env file
+echo "Updating .env file for local development..."
+cat > .env << EOL
+APP_NAME="Real Estate API"
+APP_ENV=local
+APP_KEY=base64:wNRZKSaSF42JLzxUQm16ZQnpHMqRxZcXYCJpBwXwZ0w=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mydb
+DB_USERNAME=mydb_admin
+DB_PASSWORD=password
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="\${APP_NAME}"
+
+# Google and Facebook auth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT=http://localhost:8000/api/auth/google/callback
+
+FACEBOOK_CLIENT_ID=
+FACEBOOK_CLIENT_SECRET=
+FACEBOOK_REDIRECT=http://localhost:8000/api/auth/facebook/callback
+
+# Google Maps API Key
+GOOGLE_MAPS_API_KEY=
+EOL
+
+echo ".env file created successfully."
+
+# Clear cache
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+
+# Run migrations
+echo "Running database migrations..."
+php artisan migrate:fresh --seed
+
+echo "Setup completed successfully!"
+echo "You can now run the application with: php artisan serve" 

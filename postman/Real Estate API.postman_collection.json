@@ -1,0 +1,1652 @@
+{
+    "info": {
+        "name": "Real Estate API",
+        "description": "Complete API collection for the Real Estate application with authentication, apartments, favorites, and comments management.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Role Testing",
+            "description": "Requests to set up and test different user roles",
+            "item": [
+                {
+                    "name": "Get Roles",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/roles",
+                            "host": ["{{base_url}}"],
+                            "path": ["roles"]
+                        },
+                        "description": "Get all available roles and their IDs for reference"
+                    }
+                },
+                {
+                    "name": "Switch to Admin Role",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.environment.set(\"email\", \"admin@example.com\");",
+                                    "pm.environment.set(\"password\", \"Admin@123\");",
+                                    "pm.environment.set(\"role_id\", \"1\");",
+                                    "console.log('Switched to Admin role');",
+                                    "postman.setNextRequest(\"Login\");"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        },
+                        "description": "Switch to Admin role for testing. After running this request, login to get a valid token."
+                    }
+                },
+                {
+                    "name": "Switch to Property Manager Role",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.environment.set(\"email\", \"manager@example.com\");",
+                                    "pm.environment.set(\"password\", \"Manager@123\");",
+                                    "pm.environment.set(\"role_id\", \"2\");",
+                                    "console.log('Switched to Property Manager role');",
+                                    "postman.setNextRequest(\"Login\");"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        },
+                        "description": "Switch to Property Manager role for testing. After running this request, login to get a valid token."
+                    }
+                },
+                {
+                    "name": "Switch to Regular User Role",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.environment.set(\"email\", \"user@example.com\");",
+                                    "pm.environment.set(\"password\", \"User@123\");",
+                                    "pm.environment.set(\"role_id\", \"3\");",
+                                    "console.log('Switched to Regular User role');",
+                                    "postman.setNextRequest(\"Login\");"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        },
+                        "description": "Switch to Regular User role for testing. After running this request, login to get a valid token."
+                    }
+                },
+                {
+                    "name": "Switch to Content Editor Role",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.environment.set(\"email\", \"editor@example.com\");",
+                                    "pm.environment.set(\"password\", \"Editor@123\");",
+                                    "pm.environment.set(\"role_id\", \"4\");",
+                                    "console.log('Switched to Content Editor role');",
+                                    "postman.setNextRequest(\"Login\");"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        },
+                        "description": "Switch to Content Editor role for testing. After running this request, login to get a valid token."
+                    }
+                },
+                {
+                    "name": "Switch to Support Staff Role",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.environment.set(\"email\", \"support@example.com\");",
+                                    "pm.environment.set(\"password\", \"Support@123\");",
+                                    "pm.environment.set(\"role_id\", \"5\");",
+                                    "console.log('Switched to Support Staff role');",
+                                    "postman.setNextRequest(\"Login\");"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        },
+                        "description": "Switch to Support Staff role for testing. After running this request, login to get a valid token."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Health Check",
+            "item": [
+                {
+                    "name": "API Test",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/test",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "test"]
+                        }
+                    }
+                },
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "health"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "John Doe",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "{{email}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "{{password}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password_confirmation",
+                                    "value": "{{password}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "role_id",
+                                    "value": "{{role_id}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "phone",
+                                    "value": "1234567890",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "profile_image",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/logout",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "logout"]
+                        }
+                    }
+                },
+                {
+                    "name": "Refresh Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/refresh",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "refresh"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/user",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "user"]
+                        }
+                    }
+                },
+                {
+                    "name": "Forgot Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/forgot-password",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "forgot-password"]
+                        },
+                        "description": "Request a password reset link to be sent to the user's email"
+                    }
+                },
+                {
+                    "name": "Reset Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"new_password\",\n    \"password_confirmation\": \"new_password\",\n    \"token\": \"reset_token_from_email\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/reset-password",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "reset-password"]
+                        },
+                        "description": "Reset the password using the token received via email"
+                    }
+                },
+                {
+                    "name": "Verify Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/verify-email/{id}/{hash}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "verify-email", "{id}", "{hash}"]
+                        },
+                        "description": "Verify the user's email using the verification link sent to their email"
+                    }
+                },
+                {
+                    "name": "Resend Verification Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/resend-verification-email",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "resend-verification-email"]
+                        },
+                        "description": "Resend the email verification link to the user's email"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Apartments",
+            "item": [
+                {
+                    "name": "List All Apartments",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save first apartment_id if none exists\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (!pm.environment.get(\"apartment_id\") && jsonData.data && jsonData.data.length > 0) {",
+                                    "        pm.environment.set(\"apartment_id\", jsonData.data[0].id);",
+                                    "        console.log(\"Saved apartment_id: \" + jsonData.data[0].id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments"]
+                        },
+                        "description": "List all apartments. If no apartment_id is set, it will save the first apartment's ID."
+                    }
+                },
+                {
+                    "name": "Get Single Apartment",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Apartment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save apartment_id\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set(\"apartment_id\", jsonData.data.id);",
+                                    "        console.log(\"Saved apartment_id: \" + jsonData.data.id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "title",
+                                    "value": "Luxury Apartment",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Beautiful luxury apartment with amazing views",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "price",
+                                    "value": "500000",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "Downtown",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "bedrooms",
+                                    "value": "3",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "bathrooms",
+                                    "value": "2",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "area",
+                                    "value": "150",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "images[]",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments"]
+                        },
+                        "description": "Create a new apartment listing. The response will automatically save the apartment_id for use in other requests."
+                    }
+                },
+                {
+                    "name": "Update Apartment",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "title",
+                                    "value": "Updated Luxury Apartment",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "price",
+                                    "value": "550000",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Apartment",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Apartments",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/search-apartments?query=luxury&min_price=100000&max_price=1000000&bedrooms=2&bathrooms=2",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "search-apartments"],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "luxury"
+                                },
+                                {
+                                    "key": "min_price",
+                                    "value": "100000"
+                                },
+                                {
+                                    "key": "max_price",
+                                    "value": "1000000"
+                                },
+                                {
+                                    "key": "bedrooms",
+                                    "value": "2"
+                                },
+                                {
+                                    "key": "bathrooms",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Featured Apartments",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/featured-apartments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "featured-apartments"]
+                        }
+                    }
+                },
+                {
+                    "name": "User Apartments",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/user/apartments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "user/apartments"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Comments",
+            "item": [
+                {
+                    "name": "List Comments",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save first comment_id if none exists\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (!pm.environment.get(\"comment_id\") && jsonData.data && jsonData.data.data && jsonData.data.data.length > 0) {",
+                                    "        pm.environment.set(\"comment_id\", jsonData.data.data[0].id);",
+                                    "        console.log(\"Saved comment_id: \" + jsonData.data.data[0].id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/comments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "comments"]
+                        },
+                        "description": "List all comments for an apartment"
+                    }
+                },
+                {
+                    "name": "Get Single Comment",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/comments/{{comment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "comments", "{{comment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Comment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save comment_id\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set(\"comment_id\", jsonData.data.id);",
+                                    "        console.log(\"Saved comment_id: \" + jsonData.data.id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "if (!pm.environment.get(\"apartment_id\")) {",
+                                    "    console.error(\"No apartment_id set. Please create or select an apartment first.\");",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"content\": \"Great apartment with amazing views!\",\n    \"rating\": 5\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/comments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "comments"]
+                        },
+                        "description": "Create a new comment for an apartment. Requires apartment_id to be set."
+                    }
+                },
+                {
+                    "name": "Update Comment",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"content\": \"Updated: Even better than I initially thought!\",\n    \"rating\": 5\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/comments/{{comment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "comments", "{{comment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Comment",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/comments/{{comment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "comments", "{{comment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Average Rating",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/rating",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "rating"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Comment Reports",
+            "item": [
+                {
+                    "name": "Report Comment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reason\": \"This comment contains inappropriate content\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/apartments/{{apartment_id}}/comments/{{comment_id}}/report",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "apartments", "{{apartment_id}}", "comments", "{{comment_id}}", "report"]
+                        },
+                        "description": "Report a comment for inappropriate content"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save report_id\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set(\"report_id\", jsonData.data.id);",
+                                    "        console.log(\"Saved report_id: \" + jsonData.data.id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "List Reports (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/admin/reports?status=pending",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "admin", "reports"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "description": "Filter by status: pending, resolved, rejected"
+                                }
+                            ]
+                        },
+                        "description": "List all comment reports (Admin only)"
+                    }
+                },
+                {
+                    "name": "Resolve Report (Admin)",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"resolution_notes\": \"This comment violates our community guidelines\",\n    \"action\": \"delete\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/admin/reports/{{report_id}}/resolve",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "admin", "reports", "{{report_id}}", "resolve"]
+                        },
+                        "description": "Resolve a comment report (Admin only). Actions: approve, reject, delete"
+                    }
+                }
+            ],
+            "description": "Endpoints for reporting and managing comment reports"
+        },
+        {
+            "name": "Favorites",
+            "item": [
+                {
+                    "name": "List Favorites",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/favorites",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "favorites"]
+                        }
+                    }
+                },
+                {
+                    "name": "Add to Favorites",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/favorites",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "favorites"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"apartment_id\": \"{{apartment_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Remove from Favorites",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/favorites/{{apartment_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "favorites", "{{apartment_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Check Favorite Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/favorites/{{apartment_id}}/check",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "favorites", "{{apartment_id}}", "check"]
+                        }
+                    }
+                },
+                {
+                    "name": "Toggle Favorite",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/favorites/{{apartment_id}}/toggle",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "favorites", "{{apartment_id}}", "toggle"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Saved Searches",
+            "item": [
+                {
+                    "name": "List Saved Searches",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/saved-searches",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "saved-searches"]
+                        },
+                        "description": "List all saved searches for the authenticated user"
+                    }
+                },
+                {
+                    "name": "Create Saved Search",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save saved_search_id\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set(\"saved_search_id\", jsonData.data.id);",
+                                    "        console.log(\"Saved saved_search_id: \" + jsonData.data.id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Downtown Apartments\",\n    \"filters\": {\n        \"location\": \"downtown\",\n        \"min_price\": 200000,\n        \"max_price\": 500000,\n        \"bedrooms\": 2,\n        \"bathrooms\": 2\n    }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/saved-searches",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "saved-searches"]
+                        },
+                        "description": "Create a new saved search with specific filters"
+                    }
+                },
+                {
+                    "name": "Get Saved Search",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/saved-searches/{{saved_search_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "saved-searches", "{{saved_search_id}}"]
+                        },
+                        "description": "Get details of a specific saved search"
+                    }
+                },
+                {
+                    "name": "Update Saved Search",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Updated Downtown Search\",\n    \"filters\": {\n        \"location\": \"downtown\",\n        \"min_price\": 250000,\n        \"max_price\": 600000,\n        \"bedrooms\": 3\n    }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/saved-searches/{{saved_search_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "saved-searches", "{{saved_search_id}}"]
+                        },
+                        "description": "Update an existing saved search"
+                    }
+                },
+                {
+                    "name": "Delete Saved Search",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/saved-searches/{{saved_search_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "saved-searches", "{{saved_search_id}}"]
+                        },
+                        "description": "Delete a saved search"
+                    }
+                }
+            ],
+            "description": "Endpoints for managing saved property searches"
+        },
+        {
+            "name": "Payment Methods",
+            "description": "Endpoints for managing payment methods",
+            "item": [
+                {
+                    "name": "Get Available Payment Gateways",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/payments/gateways",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "gateways"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ]
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User's Payment Methods",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/payments/methods",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "methods"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ]
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Credit Card",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Successful payment method creation\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save payment_method_id\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set(\"payment_method_id\", jsonData.data.id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/methods",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "methods"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"type\": \"card\",\n    \"name\": \"My Visa Card\",\n    \"is_default\": true,\n    \"details\": {\n        \"last4\": \"4242\",\n        \"brand\": \"visa\",\n        \"exp_month\": 12,\n        \"exp_year\": 2025\n    }\n}"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add PayPal Account",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/methods",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "methods"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"type\": \"paypal\",\n    \"name\": \"My PayPal Account\",\n    \"is_default\": false,\n    \"details\": {\n        \"email\": \"user@example.com\"\n    }\n}"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Vodafone Cash",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/methods",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "methods"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"type\": \"vodafone_cash\",\n    \"name\": \"My Vodafone Cash\",\n    \"is_default\": false,\n    \"details\": {\n        \"phone_number\": \"01012345678\"\n    }\n}"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Orange Money",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/methods",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "methods"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"type\": \"orange_money\",\n    \"name\": \"My Orange Money\",\n    \"is_default\": false,\n    \"details\": {\n        \"phone_number\": \"01212345678\"\n    }\n}"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Payment Method",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/payments/methods/{{payment_method_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "methods", "{{payment_method_id}}"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ]
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Transactions",
+            "description": "Endpoints for payment transactions",
+            "item": [
+                {
+                    "name": "Create Payment Intent",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Payment intent created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Save transaction_id\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.data && jsonData.data.id) {",
+                                    "        pm.environment.set(\"transaction_id\", jsonData.data.id);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/intent",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "intent"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 100.00,\n    \"currency\": \"USD\",\n    \"payment_method_id\": \"{{payment_method_id}}\",\n    \"booking_id\": 1,\n    \"description\": \"Booking payment for property viewing\"\n}"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Process Payment",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/process",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "process"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"payment_details\": {\n        \"status\": \"success\",\n        \"confirmation_code\": \"ABC123\"\n    }\n}"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Transaction History",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/payments/transactions",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "transactions"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ]
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Transaction Details",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/payments/transactions/{{transaction_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "transactions", "{{transaction_id}}"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ]
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Request Refund",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/payments/transactions/{{transaction_id}}/refund",
+                            "host": ["{{base_url}}"],
+                            "path": ["payments", "transactions", "{{transaction_id}}", "refund"]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reason\": \"Customer requested cancellation\"\n}"
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "// Global pre-request script",
+                    "if (!pm.environment.get(\"token\")) {",
+                    "    console.log(\"No token set. You may need to login first.\");",
+                    "}"
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "// Global test script",
+                    "// You can add common test logic here",
+                    "",
+                    "pm.test(\"Response is JSON\", function () {",
+                    "    pm.response.to.be.json;",
+                    "});",
+                    "",
+                    "pm.test(\"Response time is acceptable\", function () {",
+                    "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+                    "});"
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "your_access_token_here",
+            "type": "string"
+        }
+    ]
+} 

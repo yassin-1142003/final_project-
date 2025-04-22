@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /api/health
+Allow: /api/test
+Allow: /api/apartments
+Allow: /api/featured-apartments
+Allow: /api/search-apartments
+
+# Disallow sensitive directories
+Disallow: /api/admin/
+Disallow: /api/user/
+Disallow: /api/payments/
+Disallow: /api/login
+Disallow: /api/register
+Disallow: /storage/
+Disallow: /vendor/
+
+Sitemap: http://localhost:8000/sitemap.xml
