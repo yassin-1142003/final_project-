@@ -301,4 +301,58 @@ class AuthController extends Controller
             'data' => $roles
         ]);
     }
+
+    /**
+     * Send a password reset link to the user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationError($validator->errors());
+        }
+
+        $status = \Illuminate\Support\Facades\Password::sendResetLink($request->only('email'));
+
+        return $status === \Illuminate\Support\Facades\Password::RESET_LINK_SENT
+            ? response()->json(['message' => 'Reset link sent to your email'])
+            : response()->json(['message' => 'Unable to send reset link'], 400);
+    }
+
+    /**
+     * Reset user's password.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationError($validator->errors());
+        }
+
+        $status = \Illuminate\Support\Facades\Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->password = Hash::make($password);
+                $user->save();
+            }
+        );
+
+        return $status === \Illuminate\Support\Facades\Password::PASSWORD_RESET
+            ? response()->json(['message' => 'Password has been reset successfully'])
+            : response()->json(['message' => 'Unable to reset password'], 400);
+    }
 } 

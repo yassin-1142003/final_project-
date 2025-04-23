@@ -53,6 +53,12 @@ Route::post('/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])
 Route::post('/resend-verification-email', [AuthController::class, 'resendVerificationEmail']);
 Route::get('/roles', [AuthController::class, 'getRoles']);
 
+// Adding direct auth routes (without /api prefix) to handle both prefixed and non-prefixed requests
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
+
 // Social Login Routes
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -70,10 +76,10 @@ Route::get('apartments/{apartment}/comments', [CommentController::class, 'index'
 Route::get('apartments/{apartment}/comments/{comment}', [CommentController::class, 'show']);
 Route::get('apartments/{apartment}/rating', [CommentController::class, 'getAverageRating']);
 
-// Google Maps Routes
-Route::get('/map/nearby-places', [GoogleMapsController::class, 'getNearbyPlaces']);
-Route::get('/map/directions', [GoogleMapsController::class, 'getDirections']);
-Route::get('/map/geocode', [GoogleMapsController::class, 'geocodeAddress']);
+// Google Maps Routes - DISABLED: Controller not found
+// Route::get('/map/nearby-places', [GoogleMapsController::class, 'getNearbyPlaces']);
+// Route::get('/map/directions', [GoogleMapsController::class, 'getDirections']);
+// Route::get('/map/geocode', [GoogleMapsController::class, 'geocodeAddress']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -110,14 +116,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('reports', [CommentReportController::class, 'index']);
         Route::put('reports/{id}/resolve', [CommentReportController::class, 'resolve']);
         
-        // Database Migration Routes
-        Route::prefix('database')->group(function () {
-            Route::post('/migrate', [DatabaseMigrationController::class, 'runMigrations']);
-            Route::post('/migrate/rollback', [DatabaseMigrationController::class, 'rollbackMigration']);
-            Route::get('/migrate/status', [DatabaseMigrationController::class, 'getMigrationStatus']);
-            Route::post('/migrate/reset', [DatabaseMigrationController::class, 'resetMigrations']);
-            Route::post('/seed', [DatabaseMigrationController::class, 'runSeeder']);
-        });
+        // Database Migration Routes - DISABLED: Controller not found
+        // Route::prefix('database')->group(function () {
+        //     Route::post('/migrate', [DatabaseMigrationController::class, 'runMigrations']);
+        //     Route::post('/migrate/rollback', [DatabaseMigrationController::class, 'rollbackMigration']);
+        //     Route::get('/migrate/status', [DatabaseMigrationController::class, 'getMigrationStatus']);
+        //     Route::post('/migrate/reset', [DatabaseMigrationController::class, 'resetMigrations']);
+        //     Route::post('/seed', [DatabaseMigrationController::class, 'runSeeder']);
+        // });
     });
 
     // Saved Search Routes
@@ -129,20 +135,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [SavedSearchController::class, 'destroy']);
     });
     
-    // Google Maps User Routes
-    Route::post('/map/save-location', [GoogleMapsController::class, 'saveUserLocation']);
-    Route::get('/map/saved-locations', [GoogleMapsController::class, 'getUserSavedLocations']);
+    // Google Maps User Routes - DISABLED: Controller not found
+    // Route::post('/map/save-location', [GoogleMapsController::class, 'saveUserLocation']);
+    // Route::get('/map/saved-locations', [GoogleMapsController::class, 'getUserSavedLocations']);
     
     // Messaging System Routes
-    Route::prefix('messages')->group(function () {
-        Route::get('/', [MessageController::class, 'index']);
-        Route::get('/conversations', [MessageController::class, 'getConversations']);
-        Route::get('/conversation/{user}', [MessageController::class, 'getConversation']);
-        Route::post('/send/{receiver}', [MessageController::class, 'sendMessage']);
-        Route::put('/{message}/read', [MessageController::class, 'markAsRead']);
-        Route::delete('/{message}', [MessageController::class, 'destroy']);
-        Route::get('/unread-count', [MessageController::class, 'getUnreadCount']);
-    });
+    Route::get('/messages', [MessageController::class, 'index']);
+    Route::get('/conversations', [MessageController::class, 'getConversations']);
+    Route::get('/conversations/{userId}', [MessageController::class, 'getConversation']);
+    Route::post('/messages/{receiverId}', [MessageController::class, 'sendMessage']);
+    Route::put('/messages/{messageId}/read', [MessageController::class, 'markAsRead']);
+    Route::delete('/messages/{messageId}', [MessageController::class, 'destroy']);
+    Route::get('/messages/unread-count', [MessageController::class, 'getUnreadCount']);
     
     // Booking/Appointment System Routes
     Route::prefix('bookings')->group(function () {
@@ -180,4 +184,26 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/subscribe', [NotificationController::class, 'subscribeToSavedSearch']);
         Route::delete('/unsubscribe/{id}', [NotificationController::class, 'unsubscribeFromSavedSearch']);
     });
+});
+
+// Direct API routes for payment methods and other services
+// Added to fix Postman compatibility issues - These routes match what's used in Postman
+Route::middleware('auth:sanctum')->group(function () {
+    // Direct routes for payment methods (no /api prefix)
+    Route::get('/payments/methods', [PaymentController::class, 'getPaymentMethods']);
+    Route::post('/payments/methods', [PaymentController::class, 'addPaymentMethod']);
+    Route::delete('/payments/methods/{id}', [PaymentController::class, 'removePaymentMethod']);
+    Route::get('/payments/gateways', [PaymentController::class, 'getAvailableGateways']);
+    
+    // Direct routes for saved searches (no /api prefix)
+    Route::get('/saved-searches', [SavedSearchController::class, 'index']);
+    Route::post('/saved-searches', [SavedSearchController::class, 'store']);
+    Route::get('/saved-searches/{id}', [SavedSearchController::class, 'show']);
+    Route::put('/saved-searches/{id}', [SavedSearchController::class, 'update']);
+    Route::delete('/saved-searches/{id}', [SavedSearchController::class, 'destroy']);
+    
+    // Direct routes for favorites (no /api prefix)
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorites', [FavoriteController::class, 'store']);
+    Route::delete('/favorites/{apartment}', [FavoriteController::class, 'destroy']);
 });

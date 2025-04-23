@@ -16,38 +16,24 @@ class Apartment extends Model
         'title',
         'description',
         'price',
+        'location',
         'bedrooms',
         'bathrooms',
-        'square_feet',
-        'address',
-        'city',
-        'state',
-        'zip_code',
+        'area',
         'status',
         'type',
         'user_id',
         'is_featured',
-        'amenities',
-        'latitude',
-        'longitude',
-        'year_built',
-        'is_published',
-        'published_at'
+        'is_published'
     ];
 
     protected $casts = [
-        'amenities' => 'array',
+        'price' => 'float',
+        'bedrooms' => 'integer',
+        'bathrooms' => 'integer',
+        'area' => 'float',
         'is_featured' => 'boolean',
-        'is_published' => 'boolean',
-        'price' => 'decimal:2',
-        'latitude' => 'decimal:8',
-        'longitude' => 'decimal:8',
-        'published_at' => 'datetime',
-        'year_built' => 'integer'
-    ];
-
-    protected $dates = [
-        'published_at'
+        'is_published' => 'boolean'
     ];
 
     public function user(): BelongsTo
@@ -62,7 +48,7 @@ class Apartment extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(ApartmentImage::class);
     }
 
     public function scopePublished($query)
@@ -78,5 +64,29 @@ class Apartment extends Model
     public function scopeAvailable($query)
     {
         return $query->where('status', 'available');
+    }
+
+    /**
+     * Get the comments for the apartment.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the average rating of the apartment.
+     */
+    public function getAverageRatingAttribute()
+    {
+        return $this->comments()->where('is_approved', true)->avg('rating') ?? 0;
+    }
+
+    /**
+     * Get the total number of reviews.
+     */
+    public function getTotalReviewsAttribute()
+    {
+        return $this->comments()->where('is_approved', true)->count();
     }
 }

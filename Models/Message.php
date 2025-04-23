@@ -13,27 +13,25 @@ class Message extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'sender_id',
         'receiver_id',
         'content',
-        'is_read',
-        'attachment',
-        'attachment_type'
+        'read_at',
     ];
 
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
-        'is_read' => 'boolean',
+        'read_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'deleted_at' => 'datetime'
+        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -50,5 +48,36 @@ class Message extends Model
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+    /**
+     * Scope a query to only include unread messages.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnread($query)
+    {
+        return $query->whereNull('read_at');
+    }
+
+    /**
+     * Check if the message is read.
+     *
+     * @return bool
+     */
+    public function isRead()
+    {
+        return $this->read_at !== null;
+    }
+
+    /**
+     * Mark the message as read.
+     *
+     * @return bool
+     */
+    public function markAsRead()
+    {
+        return $this->update(['read_at' => now()]);
     }
 } 

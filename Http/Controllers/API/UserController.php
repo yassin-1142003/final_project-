@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Listing;
+use App\Models\User;
+use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,188 +13,221 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    use ApiResponses;
+
     /**
-     * Get the authenticated user's profile.
+     * Get all users
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProfile(Request $request)
+    public function index()
     {
-        $user = $request->user();
-        $user->listings_count = $user->getListingsCountAttribute();
-        $user->sales_count = $user->getSalesCountAttribute();
-        
-        return response()->json([
-            'data' => $user->load('role')
-        ]);
+        try {
+            $users = User::where('id', '!=', Auth::id())->paginate(20);
+            
+            return $this->successResponse([
+                'users' => $users->items(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+                'total' => $users->total(),
+                'per_page' => $users->perPage()
+            ]);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to retrieve users', $e->getMessage(), 500);
+        }
     }
 
     /**
-     * Update the authenticated user's profile.
+     * Get a specific user
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            
+            // Don't show sensitive information
+            $userData = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_image' => $user->profile_image,
+                'created_at' => $user->created_at->toDateTimeString(),
+            ];
+            
+            return $this->successResponse($userData);
+        } catch (\Exception $e) {
+            if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                return $this->notFoundResponse('User not found');
+            }
+            return $this->errorResponse('Failed to retrieve user', $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Search for users
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        try {
+            $query = $request->get('query', '');
+            
+            if (empty($query)) {
+                return $this->errorResponse('Search query is required', null, 400);
+            }
+            
+            $users = User::where('name', 'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%")
+                ->where('id', '!=', Auth::id())
+                ->limit(10)
+                ->get(['id', 'name', 'email', 'profile_image']);
+            
+            return $this->successResponse(['users' => $users]);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to search users', $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get current user's profile
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile()
+    {
+        try {
+            $user = Auth::user();
+            
+            return $this->successResponse([
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_image' => $user->profile_image,
+                'created_at' => $user->created_at->toDateTimeString(),
+                'email_verified_at' => $user->email_verified_at ? $user->email_verified_at->toDateTimeString() : null,
+            ]);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to retrieve profile', $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Update user profile
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function updateProfile(Request $request)
     {
-        $user = $request->user();
-
+        try {
         $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'id_card_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'wallet_number' => 'nullable|string|max:20',
+                'name' => 'sometimes|required|string|max:255',
+                'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . Auth::id(),
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Update profile data
-        $userData = $request->only(['name', 'phone', 'wallet_number']);
-
-        // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            // Delete old image if exists
-            if ($user->profile_image && Storage::exists('public/' . $user->profile_image)) {
-                Storage::delete('public/' . $user->profile_image);
+                return $this->validationError($validator->errors());
             }
 
-            // Store new image
-            $path = $request->file('profile_image')->store('profile_images', 'public');
-            $userData['profile_image'] = $path;
-        }
-
-        // Handle ID card image upload
-        if ($request->hasFile('id_card_image')) {
-            // Delete old image if exists
-            if ($user->id_card_image && Storage::exists('public/' . $user->id_card_image)) {
-                Storage::delete('public/' . $user->id_card_image);
+            $user = Auth::user();
+            
+            if ($request->has('name')) {
+                $user->name = $request->name;
             }
-
-            // Store new image
-            $path = $request->file('id_card_image')->store('id_cards', 'public');
-            $userData['id_card_image'] = $path;
+            
+            if ($request->has('email') && $request->email !== $user->email) {
+                $user->email = $request->email;
+                $user->email_verified_at = null; // Require re-verification
+            }
+            
+            $user->save();
+            
+            return $this->successResponse([
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_image' => $user->profile_image,
+                'email_verified_at' => $user->email_verified_at ? $user->email_verified_at->toDateTimeString() : null,
+            ], 'Profile updated successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to update profile', $e->getMessage(), 500);
         }
-
-        $user->update($userData);
-
-        $user->listings_count = $user->getListingsCountAttribute();
-        $user->sales_count = $user->getSalesCountAttribute();
-
-        return response()->json([
-            'message' => 'Profile updated successfully',
-            'data' => $user->fresh()->load('role'),
-        ]);
     }
 
     /**
-     * Change the authenticated user's password.
+     * Update user avatar/profile image
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function changePassword(Request $request)
+    public function updateAvatar(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'avatar' => 'required|image|max:2048', // 2MB max
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            if ($validator->fails()) {
+                return $this->validationError($validator->errors());
+            }
+
+            $user = Auth::user();
+            
+            // Delete old avatar if exists
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+            
+            // Store new avatar
+            $path = $request->file('avatar')->store('avatars', 'public');
+            
+            $user->profile_image = $path;
+            $user->save();
+            
+            return $this->successResponse([
+                'profile_image' => $user->profile_image,
+            ], 'Avatar updated successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to update avatar', $e->getMessage(), 500);
         }
-
-        $user = $request->user();
-
-        // Check current password
-        if (!Hash::check($request->current_password, $user->password)) {
-            return response()->json(['message' => 'Current password is incorrect'], 422);
-        }
-
-        // Update password
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        return response()->json(['message' => 'Password changed successfully']);
     }
 
     /**
-     * Get user favorites.
+     * Update user password
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getFavorites(Request $request)
+    public function updatePassword(Request $request)
     {
-        $user = $request->user();
-        $favorites = $user->favoritedListings()
-            ->with(['user', 'adType', 'propertyImages'])
-            ->active()
-            ->paginate(15);
+        try {
+            $validator = Validator::make($request->all(), [
+                'current_password' => 'required|string',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
 
-        return response()->json([
-            'data' => $favorites,
-            'meta' => [
-                'total' => $favorites->total(),
-                'per_page' => $favorites->perPage(),
-                'current_page' => $favorites->currentPage(),
-                'last_page' => $favorites->lastPage(),
-            ],
-        ]);
-    }
-
-    /**
-     * Get filtered apartments.
-     */
-    public function getFilteredApartments(Request $request)
-    {
-        $query = Listing::with(['user', 'adType', 'propertyImages'])
-            ->active()
-            ->where('property_type', 'apartment');
-
-        // Apply filters
-        if ($request->has('city')) {
-            $query->where('city', $request->city);
-        }
-
-        if ($request->has('state')) {
-            $query->where('state', $request->state);
-        }
-
-        if ($request->has('min_area') && $request->has('max_area')) {
-            $query->whereBetween('area', [$request->min_area, $request->max_area]);
-        } else {
-            if ($request->has('min_area')) {
-                $query->where('area', '>=', $request->min_area);
+            if ($validator->fails()) {
+                return $this->validationError($validator->errors());
             }
-            if ($request->has('max_area')) {
-                $query->where('area', '<=', $request->max_area);
+
+            $user = Auth::user();
+            
+            // Check current password
+            if (!Hash::check($request->current_password, $user->password)) {
+                return $this->errorResponse('Current password is incorrect', null, 422);
             }
+            
+            $user->password = Hash::make($request->password);
+            $user->save();
+            
+            return $this->successResponse(null, 'Password updated successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to update password', $e->getMessage(), 500);
         }
-
-        if ($request->has('bedrooms')) {
-            $query->where('bedrooms', $request->bedrooms);
-        }
-
-        if ($request->has('bathrooms')) {
-            $query->where('bathrooms', $request->bathrooms);
-        }
-
-        if ($request->has('is_furnished')) {
-            $query->where('is_furnished', $request->is_furnished);
-        }
-
-        // Sort
-        $sortBy = $request->input('sort_by', 'created_at');
-        $sortOrder = $request->input('sort_order', 'desc');
-        $allowedSortFields = ['price', 'created_at', 'area', 'bedrooms'];
-        
-        if (in_array($sortBy, $allowedSortFields)) {
-            $query->orderBy($sortBy, $sortOrder === 'asc' ? 'asc' : 'desc');
-        }
-
-        $apartments = $query->paginate(15);
-
-        return response()->json([
-            'data' => $apartments,
-            'meta' => [
-                'total' => $apartments->total(),
-                'per_page' => $apartments->perPage(),
-                'current_page' => $apartments->currentPage(),
-                'last_page' => $apartments->lastPage(),
-            ],
-        ]);
     }
 } 
